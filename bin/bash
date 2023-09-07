@@ -1,0 +1,24 @@
+#!/bin/bash
+
+flag=0
+
+# Check if a container name is provided as an argument
+if [ -z "$1" ]; then
+  echo "Please specify a container name (e.g., mariadb)"
+  flag=1 
+fi
+
+# Check if the specified container exists
+if ! docker ps -a --format "{{.Names}}" | grep -q "$1"; then
+  echo "Container '$1' does not exist"
+  flag=1 
+fi
+
+if [ $flag -eq 1 ]; then
+  echo "The containers to use are:"
+  docker compose config --services
+  exit 1
+fi
+
+# Run the bash shell in the specified container
+bin/cli $1 bash 

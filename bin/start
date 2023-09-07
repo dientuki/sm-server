@@ -1,0 +1,39 @@
+#!/bin/bash
+set -o errexit
+MEM=$(docker info | grep "Total Memory" | cut -d':' -f2 | xargs | sed s/GiB//)
+# Docker reports RAM 0.2 less than what it is actually set to
+(( $(echo "$MEM < 5.7" | bc -l) )) && echo "There must be at least 6GB of RAM allocated to Docker to continue." && exit
+
+options=("development" "stage" "production")
+
+# Initialize a variable to store the selected environment
+enviroment=""
+echo "Select an environment: "
+select option in "${options[@]}"
+do
+  case $option in
+    "development")
+      enviroment="development"
+      echo "You selected Development environment."
+      # Add your Development environment commands here
+      break
+      ;;
+    "stage")
+      enviroment="stage"
+      echo "You selected Stage environment."
+      # Add your Stage environment commands here
+      break
+      ;;
+    "production")
+      enviroment="production"
+      echo "You selected Production environment."
+      # Add your Production environment commands here
+      break
+      ;;
+    *)
+      echo "Invalid option. Please select a valid environment."
+      ;;
+  esac
+done
+
+docker compose --profile "$enviroment" up  --remove-orphans -d "$@"
