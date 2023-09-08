@@ -1,0 +1,6 @@
+[submodule "mk1"]
+	path = mk1
+	url = git@github.com:dientuki/sm-knowledge.git
+[submodule "src/knowledge"]
+	path = src/knowledge
+	url = git@github.com:dientuki/sm-knowledge.git
