@@ -2,30 +2,11 @@
 
 echo 'Coping enviroment files'
 cp local.env .env
-cp env/mariadb/development.env env/mariadb/db.env
+
+docker compose --profile development up  --remove-orphans -d
 
 echo 'Cloning repositories'
 
-# Initialize arrays to store data
-names=()
-folders=()
-urls=()
-
-# Define the input file
-repositories="repositories.csv"
-
-# Read the CSV file line by line and populate arrays
-while IFS=, read -r name folder url || [ -n "$site" ]; do
-    names+=("$name")
-    folders+=("$folder")
-    urls+=("$url")
-done <<< $(tail -n +2 $repositories)
-
-# Iterate through the arrays and display the output
-for ((i = 0; i < ${#names[@]}; i++)); do
-    echo "${names[i]} : ${folders[i]} and ${urls[i]}"
-    #git clone ${urls[i]} ${folders[i]}
-done
-
-
-source env/mariadb/db.env
+git clone git@github.com:dientuki/sm-knowledge.git src/knowledge
+docker compose exec knwl-php composer install
+docker compose exec knwl-php php bin/console setup

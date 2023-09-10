@@ -14,7 +14,7 @@ services:
     hostname: mariadb
     ports:
       - 3306:3306
-    env_file: ./env/mariadb/db.env
+    env_file: ./docker/mariadb/db.env
     volumes:
       - dbdata:/var/lib/mysql
       - ./docker/mariadb/my.cnf:/etc/mysql/my.cnf
@@ -22,7 +22,7 @@ services:
       - db-network    
       - knowledge-network
     healthcheck:
-      test: 'mariadb -h localhost -u root -p${MYSQL_ROOT_PASSWORD}'
+      test: 'mariadb -h localhost -u root -p${DB_ROOT_PASSWORD}'
       interval: 5s
       timeout: 5s
       retries: 5   
@@ -31,7 +31,7 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     environment:
-      - PMA_HOST=mariadb
+      - PMA_HOST=${DB_HOST}
     hostname: phpmyadmin
     ports:
       - 8080:80
