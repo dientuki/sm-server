@@ -8,7 +8,9 @@ services:
       dockerfile: php/Dockerfile
     image: sm/knwl-php
     hostname: knwl-php
-    env_file: ./knowledge.env
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     working_dir: /var/www
     volumes:
       - ${ROOT}src/knowledge:/var/www
