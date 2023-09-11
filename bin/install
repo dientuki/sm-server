@@ -17,5 +17,5 @@ if [ ! -d "src/knowledge/.git" ]; then
   echo "The .git directory does not exist in src/knowledge."
   git clone git@github.com:dientuki/sm-knowledge.git src/knowledge
 fi
-bin/cli knwl-php composer install
+bin/clic knwl-php composer install
 bin/clic knwl-php php bin/console setup
