@@ -7,7 +7,7 @@ source development.env
 
 docker compose --profile development up  --remove-orphans -d
 echo 'Fix user root of database'
-bin/cli mariadb mariadb -uroot -p${DB_ROOT_PASSWORD} -e "update global_priv set Host = '%' where User = 'root' AND Host = 'localhost';" mysql
+bin/cli mariadb mariadb -uroot -p${DB_ROOT_PASSWORD} -e "update global_priv set Host = 'smk5_db-network' where User = 'root' AND Host = 'localhost';" mysql
 bin/cli mariadb mariadb -uroot -p${DB_ROOT_PASSWORD} -e 'FLUSH PRIVILEGES;'
 
 echo 'Cloning repositories'
