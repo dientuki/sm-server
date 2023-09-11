@@ -2,7 +2,7 @@
 
 echo 'Coping enviroment files'
 cp development.env .env
-cp docker/mariadb/development.env docker/mariadb/.env
+cp docker/mariadb/development.env docker/mariadb/db.env
 
 docker compose --profile development up  --remove-orphans -d
 
