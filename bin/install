@@ -3,8 +3,11 @@
 echo 'Coping enviroment files'
 cp development.env .env
 cp docker/mariadb/development.env docker/mariadb/db.env
+source docker/mariadb/db.env
 
 docker compose --profile development up  --remove-orphans -d
+docker compose exec mariadb mariadb -uroot -p"${MARIADB_ROOT_PASSWORD}" -e "update global_priv set Host = '%' where User = 'root' AND Host = 'localhost';" mysql
+docker compose exec mariadb mariadb -uroot -p"${MARIADB_ROOT_PASSWORD}" -e 'FLUSH PRIVILEGES;'
 
 echo 'Cloning repositories'
 
