@@ -6,9 +6,7 @@ include:
   - docker/knowledge/compose.yml
 
 services: 
-
-  #MariaDB Service
-  mariadb:
+  mariadb: #MariaDB Service
     image: "mariadb:${MARIADB_VERSION}"
     tty: true
     hostname: mariadb
@@ -27,8 +25,7 @@ services:
       timeout: 5s
       retries: 5   
 
-  #Phpmyadmin
-  phpmyadmin:
+  phpmyadmin: #Phpmyadmin
     image: phpmyadmin/phpmyadmin
     environment:
       - PMA_HOST=${DB_HOST}
