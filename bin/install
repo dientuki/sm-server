@@ -3,14 +3,19 @@
 echo 'Coping enviroment files'
 cp development.env .env
 cp docker/mariadb/development.env docker/mariadb/db.env
-source docker/mariadb/db.env
+source development.env
 
 docker compose --profile development up  --remove-orphans -d
-docker compose exec mariadb mariadb -uroot -p"${MARIADB_ROOT_PASSWORD}" -e "update global_priv set Host = '%' where User = 'root' AND Host = 'localhost';" mysql
-docker compose exec mariadb mariadb -uroot -p"${MARIADB_ROOT_PASSWORD}" -e 'FLUSH PRIVILEGES;'
+echo 'Fix user root of database'
+bin/cli mariadb mariadb -uroot -p${DB_ROOT_PASSWORD} -e "update global_priv set Host = '%' where User = 'root' AND Host = 'localhost';" mysql
+bin/cli mariadb mariadb -uroot -p${DB_ROOT_PASSWORD} -e 'FLUSH PRIVILEGES;'
 
 echo 'Cloning repositories'
 
-git clone git@github.com:dientuki/sm-knowledge.git src/knowledge
-docker compose exec knwl-php composer install
-docker compose exec knwl-php php bin/console setup
+# knowledge
+if [ ! -d "src/knowledge/.git" ]; then
+  echo "The .git directory does not exist in src/knowledge."
+  git clone git@github.com:dientuki/sm-knowledge.git src/knowledge
+fi
+bin/cli knwl-php composer install
+bin/clic knwl-php php bin/console setup
