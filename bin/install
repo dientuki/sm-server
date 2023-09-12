@@ -1,13 +1,25 @@
 #!/bin/bash
 
 echo 'Coping enviroment files'
+
 cp development.env .env
-cp docker/mariadb/development.env docker/mariadb/db.env
-source development.env
+excluded_files=(".env") 
+
+for file in $(find "docker" -type f -name "*.env"); do
+  filename=$(basename "$file")
+  
+  # Check if the file should be excluded
+  if [ "$filename" != "$excluded_files" ]; then
+    destination="$(dirname "$file")/.env"
+    mv "$file" "$destination"
+    echo "Renamed $filename to .env"
+  fi
+done
+source .env
 
 docker compose --profile development up  --remove-orphans -d
 echo 'Fix user root of database'
-bin/cli mariadb mariadb -uroot -p${DB_ROOT_PASSWORD} -e "update global_priv set Host = '%' where User = 'root' AND Host = 'localhost';" mysql
+bin/cli mariadb mariadb -uroot -p${DB_ROOT_PASSWORD} -e "update global_priv set Host = '%' where User = 'root' AND Host = 'mariadb';" mysql
 bin/cli mariadb mariadb -uroot -p${DB_ROOT_PASSWORD} -e 'FLUSH PRIVILEGES;'
 
 echo 'Cloning repositories'
