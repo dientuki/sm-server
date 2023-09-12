@@ -1,4 +1,5 @@
-FROM php:8.2.1-fpm
+ARG php=8.2.1-fpm
+FROM php:$php
 
 # Copy composer.lock and composer.json
 #COPY ./src/api/knowledge/composer.lock ./src/api/knowledge/composer.json /var/www/

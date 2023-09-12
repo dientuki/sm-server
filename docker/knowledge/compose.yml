@@ -5,6 +5,8 @@ services:
     build:
       context: ./
       dockerfile: php/Dockerfile
+      args:
+        - php=${PHP}
     image: sm/knwl-php
     hostname: knwl-php
     environment:
@@ -20,7 +22,7 @@ services:
       - knowledge-network      
 
   knwl-nginx:
-    image: nginx:alpine
+    image: nginx:${NGINX}
     restart: unless-stopped
     hostname: knwl-nginx
     ports:
