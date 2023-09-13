@@ -2,19 +2,21 @@
 
 echo 'Coping enviroment files'
 
-cp development.env .env
+cp .env.default .env
 excluded_files=(".env") 
 
-for file in $(find "docker" -type f -name "*.env"); do
+for file in $(find "docker" -type f -name ".env.default"); do
   filename=$(basename "$file")
   
   # Check if the file should be excluded
   if [ "$filename" != "$excluded_files" ]; then
     destination="$(dirname "$file")/.env"
-    mv "$file" "$destination"
-    echo "Renamed $filename to .env"
+    if [ ! -e "$destination" ]; then
+      mv "$file" "$destination"
+    fi
   fi
 done
+
 source .env
 
 docker compose --profile development up  --remove-orphans -d

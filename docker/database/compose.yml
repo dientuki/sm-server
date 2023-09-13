@@ -1,0 +1,35 @@
+version: '3.8'
+
+services: 
+  mariadb: #MariaDB Service
+    image: "mariadb:${MARIADB}"
+    tty: true
+    hostname: mariadb
+    ports:
+      - 3306:3306
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./mariadb/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - db-network    
+      - knowledge-network
+    healthcheck:
+      test: 'mariadb -h localhost -u root -p${DB_ROOT_PASSWORD}'
+      interval: 5s
+      timeout: 5s
+      retries: 5   
+
+  phpmyadmin: #Phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_HOST=${DB_HOST}
+    hostname: phpmyadmin
+    ports:
+      - 8080:80
+    profiles: 
+      - development
+    networks:
+      - db-network        
+    depends_on:
+      mariadb:
+          condition: service_healthy      
