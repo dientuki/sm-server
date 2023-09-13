@@ -1,8 +1,2 @@
 .env
-# Ignore all files in the env/ directory
-env/*/*
-docker/*/*
-
-# But allow development.env to be tracked
-!env/**/development.env
-!docker/**/development.env
+!.env.default
