@@ -19,18 +19,25 @@ services:
       - 9000:9000
     networks:
       - db-network    
-      - knowledge-network      
+      - knowledge-network  
 
   knwl-nginx:
     image: nginx:${NGINX}
     restart: unless-stopped
     hostname: knwl-nginx
-    ports:
-      - 8081:80
     volumes:
       - ${ROOT}src/knowledge:/var/www
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     networks:
-      - knowledge-network      
+      - public
+      - knowledge-network  
     depends_on:
       - knwl-php     
+    labels:
+      - "traefik.enable=true"    
+      - "traefik.http.routers.knwl-nginx.rule=Host(`${API_SUBDOMAIN}.${HOST}`)"  
+      - "traefik.http.routers.knwl-nginx.entrypoints=web"   
+
+networks:
+  knowledge-network:
+    driver: bridge  

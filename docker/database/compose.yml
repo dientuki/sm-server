@@ -14,8 +14,7 @@ services:
       - dbdata:/var/lib/mysql
       - ./mariadb/my.cnf:/etc/mysql/my.cnf
     networks:
-      - db-network    
-      - knowledge-network
+      - db-network 
     healthcheck:
       test: 'mariadb -h localhost -u root -p${MARIADB_ROOT_PASSWORD}'
       interval: 5s
@@ -27,12 +26,15 @@ services:
     environment:
       - PMA_HOST=${DB_HOST}
     hostname: phpmyadmin
-    ports:
-      - 8080:80
     profiles: 
       - development
     networks:
-      - db-network        
+      - public
+      - db-network      
     depends_on:
       mariadb:
-          condition: service_healthy      
+          condition: service_healthy    
+    labels:
+      - "traefik.enable=true"    
+      - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.${HOST}`)"  
+      - "traefik.http.routers.phpmyadmin.entrypoints=web"   

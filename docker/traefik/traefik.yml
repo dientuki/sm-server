@@ -1,0 +1,26 @@
+entryPoints:
+  web:
+    address: ":80"
+    # Redict https https://doc.traefik.io/traefik/routing/entrypoints/#redirection
+#    http:
+#      redirections:
+#        entryPoint:
+#          to: websecure
+#          scheme: https    
+#
+#  websecure:
+#    address: ":443"
+
+api:
+  insecure: true
+  dashboard: true
+
+providers:
+  docker:
+    exposedbydefault: false
+    network: "traefik-network"
+    #watch: true
+    #swarmMode: false      
+
+log:
+  level: "DEBUG"

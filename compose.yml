@@ -5,13 +5,14 @@ name: "smart-repairs"
 include:
   - docker/database/compose.yml
   - docker/knowledge/compose.yml
+  - docker/traefik/compose.yml   
 
 #Docker Networks
 networks:
   db-network:
-    driver: bridge
-  knowledge-network:
-    driver: bridge  
+  public:
+    external: true
+    name: traefik-network  
 
 #Volumes
 volumes:
